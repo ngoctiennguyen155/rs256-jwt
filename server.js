@@ -21,9 +21,11 @@ app.get("/login", async (req, res) => {
       cty: "appotapay-api;v=1",
     },
   });
-  const siganture = cryptoJs.HmacSHA256(
-    "partnerRefId=AB123&productCode=AC100&quantity=10",
-    "MhJ6HD2WMfsuoz7K1Sp0a5qTzkBJkcR6"
+  const siganture = cryptoJs.enc.Base64.stringify(
+    cryptoJs.HmacSHA256(
+      "partnerRefId=AB123&productCode=AC100&quantity=10",
+      "MhJ6HD2WMfsuoz7K1Sp0a5qTzkBJkcR6"
+    )
   );
   console.log(token);
   console.log(siganture);
