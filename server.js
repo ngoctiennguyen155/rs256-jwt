@@ -16,14 +16,14 @@ app.get("/login", async (req, res) => {
     jti: `cR6fsuoz7K1SpMhJ6HD2WMqTzkBJk0a5-${Date.now}`,
   };
   const token = jwt.sign(payload, "MhJ6HD2WMfsuoz7K1Sp0a5qTzkBJkcR6", {
-    algorithm: "HS256",
+    algorithm: "SHA256",
     expiresIn: "2h",
   });
   const signature = jwt.sign(
     "partnerRefId=AB123&productCode=AC100&quantity=10",
     "MhJ6HD2WMfsuoz7K1Sp0a5qTzkBJkcR6",
     {
-      algorithm: "HS256",
+      algorithm: "SHA256",
     }
   );
   console.log(token);
