@@ -1,23 +1,50 @@
 const express = require("express");
 const jwt = require("jsonwebtoken");
-
 const app = express();
-
+const crypto = require("crypto");
+const sign = crypto.createHmac("SHA256", "MhJ6HD2WMfsuoz7K1Sp0a5qTzkBJkcR6");
+const axios = require("axios");
 app.use(express.urlencoded({ extended: true }));
 
-app.get("/login", (req, res) => {
-  const privateKey = require("fs").readFileSync("rs256.key", {
-    encoding: "utf-8",
-  });
+app.get("/login", async (req, res) => {
+  // const privateKey = require("fs").readFileSync("rs256.key", {
+  //   encoding: "utf-8",
+  // });
   const payload = {
-    name: "tien",
-    age: 18,
+    iss: "TEST",
+    api_key: "cR6fsuoz7K1SpMhJ6HD2WMqTzkBJk0a5",
+    jti: `cR6fsuoz7K1SpMhJ6HD2WMqTzkBJk0a5-${Date.now}`,
   };
-  const token = jwt.sign(payload, privateKey, {
-    algorithm: "RS256",
-    expiresIn: "2m",
+  const token = jwt.sign(payload, "MhJ6HD2WMfsuoz7K1Sp0a5qTzkBJkcR6", {
+    algorithm: "HS256",
+    expiresIn: "2h",
   });
-  res.status(201).json({ status: "success", token });
+  const signature = jwt.sign(
+    "partnerRefId=AB123&productCode=AC100&quantity=10",
+    "MhJ6HD2WMfsuoz7K1Sp0a5qTzkBJkcR6",
+    {
+      algorithm: "HS256",
+    }
+  );
+  console.log(token);
+  console.log(signature);
+  const fetchData = await axios({
+    method: "post",
+    url: "https://ebill.dev.appotapay.com/api/v1/service/shopcard/buy",
+    headers: {
+      "Content-Type": "application/json",
+      "X-APPOTAPAY-AUTH": `Bearer ${token}`,
+    },
+    data: {
+      partnerRefId: "AB123",
+      productCode: "AC100",
+      quantity: 10,
+      siganture: signature,
+    },
+  });
+  console.log(fetchData);
+
+  res.status(201).json({ status: "success", fetchData });
 });
 
 app.post("/post/:token", async (req, res) => {
@@ -37,6 +64,6 @@ app.post("/post/:token", async (req, res) => {
   });
 });
 
-app.listen(5000, () => {
+app.listen(3000, () => {
   console.log("server is running...");
 });
