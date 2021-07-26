@@ -15,6 +15,9 @@ app.get("/login", async (req, res) => {
   };
   const token = jwt.sign(payload, "MhJ6HD2WMfsuoz7K1Sp0a5qTzkBJkcR6", {
     expiresIn: "2h",
+    header: {
+      cty: "appotapay-api;v=1",
+    },
   });
   const signature = jwt.sign(
     "partnerRefId=AB123&productCode=AC100&quantity=10",
