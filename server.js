@@ -98,7 +98,7 @@ const buffer = Buffer.from(
   "base64"
 );
 const decrypted = crypto.privateDecrypt(privateKey, buffer);
-console.log(decrypted.toString("base64"));
+console.log(decrypted.toString("utf8"));
 
 app.listen(3000, () => {
   console.log("server is running...");
