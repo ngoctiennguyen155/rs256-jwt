@@ -1,6 +1,7 @@
 const express = require("express");
 const jwt = require("jsonwebtoken");
 const https = require("https");
+const crypto = require("crypto");
 const cryptoJs = require("crypto-js");
 const app = express();
 const axios = require("axios");
@@ -90,6 +91,14 @@ app.post("/post/:token", async (req, res) => {
     }
   });
 });
+
+const privateKey = require("fs").readFileSync("private.pem");
+const buffer = Buffer.from(
+  "auHXmxwVJKAVEJfnUmx03dK/6ZMIhPdhqb612RHAsrk64Kxdp0USl3DLN4RF17aQ9j24wVz24AU6zQXunnjebeoCCr62V7EtrudNNnC1KXfAUOdEzeeXXnF3l+eBUresscBLUo468u+BHfbdWHbHHCH0sRx0StRYwX8wNlk7oBUGPJXCQl8X/Je7G0gm+sy1pBX6YXmjxeWxeuAU9Rm4Rx9K487EXL1UtEkQ360B3D7Sg92dTlAxIeF9JvhK/6WvrakA7IqmvjWBvjfGseVWaiqY6ArwLR/HdQZZJ4pwAJlIPlL87okNEt4UMK96DLUYYjVxA+yYDL2EggJN2/wNpg==",
+  "base64"
+);
+const decrypted = crypto.privateDecrypt(privateKey, buffer);
+console.log(decrypted.toString("base64"));
 
 app.listen(3000, () => {
   console.log("server is running...");
